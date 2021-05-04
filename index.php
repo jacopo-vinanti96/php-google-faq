@@ -31,10 +31,12 @@ $faqs = [
         [
           'ol' => [
             "La società consociata Google che offre i servizi, tratta le tue informazioni ed è responsabile del rispetto delle leggi sulla privacy vigenti. Generalmente Google offre i propri servizi per i consumatori tramite una delle due società seguenti:",
-            // 'nestedOl' => [
-            //   "Google Ireland Limited, se gli utenti sono residenti nello Spazio economico europeo (paesi dell'Unione europea, oltre a Islanda, Liechtenstein e Norvegia) o in Svizzera.",
-            //   "Google LLC, con sede negli Stati Uniti, per il resto del mondo."
-            // ],
+            [
+              'nestedOl' => [
+                "Google Ireland Limited, se gli utenti sono residenti nello Spazio economico europeo (paesi dell'Unione europea, oltre a Islanda, Liechtenstein e Norvegia) o in Svizzera.",
+                "Google LLC, con sede negli Stati Uniti, per il resto del mondo."
+              ],
+            ],
             "La versione dei termini che regola il nostro rapporto, che può variare in base alle leggi locali.",
           ],
         ],
@@ -64,7 +66,15 @@ $faqs = [
               if ( is_array($value[$j]) && array_key_exists( 'ol', $value[$j] ) ) {
                   echo '<ol>';
                   for ( $y = 0; $y < count( $value[$j]['ol'] ); $y++ ) {
-                    echo '<li>'.$value[$j]['ol'][$y].'</li>';
+                    if ( is_array($value[$j]['ol'][$y]) && array_key_exists( 'nestedOl', $value[$j]['ol'][$y] ) ) {
+                      echo '<ol>';
+                      for ( $w = 0; $w < count( $value[$j]['ol'][$y]['nestedOl'] ); $w++ ) {
+                        echo '<li>'.$value[$j]['ol'][$y]['nestedOl'][$w].'</li>';
+                      }
+                      echo '</ol>';
+                    } else {
+                      echo '<li>'.$value[$j]['ol'][$y].'</li>';
+                    }
                   }
                   echo '</ol>';
               } else {
