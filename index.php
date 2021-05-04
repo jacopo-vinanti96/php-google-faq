@@ -40,10 +40,6 @@ $faqs = [
   //     ]
   // ],
 ]
-
-foreach ($faqs as $key => $value) {
-  if
-}
 ?>
 
 <!DOCTYPE html>
@@ -56,9 +52,21 @@ foreach ($faqs as $key => $value) {
 </head>
 <body>
   <main>
+    <?php
+      for ( $i = 0; $i < count( $faqs ); $i++ ) {
+        foreach ( $faqs[$i] as $key => $value) {
+          if ( $key == 'h2') {
+            echo '<h2>'.$value.'</h2>';
+          }
+          if ( $key == 'p' ) {
+            for ( $j = 0; $j < count( $value ); $j++ ) {
+              echo '<p>'.$value[$j].'</p>';
 
-    <p>
-    </p>
+            }
+          }
+        }
+      }
+    ?>
   </main>
 
 </body>
