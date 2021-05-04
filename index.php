@@ -4,6 +4,14 @@ ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
+$noQuery = true;
+if ( isset( $_GET['q'] ) ) {
+  $q = $_GET['q'];
+  if ( !empty( $q ) ) {
+    str_replace('%20', ' ', $q );
+    $noQuery = false;
+  }
+}
 $faqs = [
   [
     'h2' => "Come state implementando la recente decisione della Corte di giustizia dell'Unione europea (CGUE) relativa al diritto all'oblio?",
@@ -60,6 +68,7 @@ $faqs = [
 <body>
   <main>
     <?php
+    if ( $noQuery == true ) {
       for ( $i = 0; $i < count( $faqs ); $i++ ) {
         foreach ( $faqs[$i] as $key => $value) {
           if ( $key == 'h2') {
@@ -67,6 +76,35 @@ $faqs = [
           } else if ( $key == 'p' ) {
             for ( $j = 0; $j < count( $value ); $j++ ) {
               if ( is_array($value[$j]) && array_key_exists( 'ol', $value[$j] ) ) {
+                echo '<ol>';
+                for ( $y = 0; $y < count( $value[$j]['ol'] ); $y++ ) {
+                  if ( is_array($value[$j]['ol'][$y]) && array_key_exists( 'nestedOl', $value[$j]['ol'][$y] ) ) {
+                    echo '<ol>';
+                    for ( $w = 0; $w < count( $value[$j]['ol'][$y]['nestedOl'] ); $w++ ) {
+                      echo '<li>'.$value[$j]['ol'][$y]['nestedOl'][$w].'</li>';
+                    }
+                    echo '</ol>';
+                  } else {
+                    echo '<li>'.$value[$j]['ol'][$y].'</li>';
+                  }
+                }
+                echo '</ol>';
+              } else {
+                echo '<p>'.$value[$j].'</p>';
+              }
+            }
+          }
+        }
+      }
+    } else {
+      for ( $i = 0; $i < count( $faqs ); $i++ ) {
+        if ( strpos( strtolower( $faqs[$i]['h2'] ), strtolower( $q ) ) !== false ) {
+          foreach ( $faqs[$i] as $key => $value) {
+            if ( $key == 'h2') {
+              echo '<h2>'.$value.'</h2>';
+            } else if ( $key == 'p' ) {
+              for ( $j = 0; $j < count( $value ); $j++ ) {
+                if ( is_array($value[$j]) && array_key_exists( 'ol', $value[$j] ) ) {
                   echo '<ol>';
                   for ( $y = 0; $y < count( $value[$j]['ol'] ); $y++ ) {
                     if ( is_array($value[$j]['ol'][$y]) && array_key_exists( 'nestedOl', $value[$j]['ol'][$y] ) ) {
@@ -80,13 +118,15 @@ $faqs = [
                     }
                   }
                   echo '</ol>';
-              } else {
+                } else {
                   echo '<p>'.$value[$j].'</p>';
+                }
               }
             }
           }
         }
       }
+    }
     ?>
   </main>
 
